@@ -14,6 +14,9 @@ namespace CESAR
 {
     public partial class Form1 : Form
     {
+        string caminho = "EMPTY";
+        string datasource = "localhost";
+        string database = @"C:\Conceito\DB\*.FDB";
         public Form1()
         {
             InitializeComponent();
@@ -31,19 +34,50 @@ namespace CESAR
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var dadosIni = File.ReadLines(@"C:\Conceito\CIE\CIE.INI");
-            var dadosIni2 = dadosIni.ToList<string>();
-            foreach (var item in dadosIni)
-            {
-                item.Contains("database");
-            };
-            FbConnection cesar = new FbConnection(@"datasource=10.100.20.18/3050;database=/opt/firebird/data/Sandro/SANDRO.FDB;user=sysdba;password=masterkey");
+            FbConnection cesar = new FbConnection(@"datasource=localhost;database=C:\Conceito\DB\Bomclima.FDB;user=sysdba;password=masterkey");
             cesar.Open();
-            FbCommand cmd = new FbCommand("select * from nf_tmp",cesar);
+            FbCommand cmd = new FbCommand("update nota_fiscal n set n.nf_datasaida = current_date, n.nf_emissao = current_date where n.status_nfe in ('D','T') and n.nf_emissao < current_date",cesar);
             cmd.ExecuteNonQuery();
+            if (caminho.Equals("EMPTY"))
+            {
+                label3.Visible = false;
+            }
+            else
+            {
+                label3.Visible = true;
+            }
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+            label7.Text = openFileDialog1.FileName;
+            string[] array = File.ReadAllLines(label7.Text);
+            foreach (string item in array)
+            {
+                caminho = item.StartsWith("Database") ? item : caminho;
+            };
+            //Localizar no INI a datasource (localhost ou IP)
+            label7.Text = caminho.Remove(0, 9);
+            label7.Text = caminho.Remove(0, 9).Substring(caminho.IndexOf);
+
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }
