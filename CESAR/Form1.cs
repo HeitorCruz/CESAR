@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Threading.Tasks;
-using FirebirdSql.Data.FirebirdClient;
 using System.Windows.Forms;
+using FirebirdSql.Data.FirebirdClient;
+
 
 namespace CESAR
 {
@@ -34,7 +28,7 @@ namespace CESAR
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FbConnection cesar = new FbConnection(@"datasource=localhost;database=C:\Conceito\DB\Bomclima.FDB;user=sysdba;password=masterkey");
+            FbConnection cesar = new FbConnection($@"datasource=localhost;{caminho};user=SYSDBA;password=masterkey");
             cesar.Open();
             FbCommand cmd = new FbCommand("update nota_fiscal n set n.nf_datasaida = current_date, n.nf_emissao = current_date where n.status_nfe in ('D','T') and n.nf_emissao < current_date",cesar);
             cmd.ExecuteNonQuery();
@@ -48,18 +42,16 @@ namespace CESAR
             }
         }
         private void button2_Click(object sender, EventArgs e)
-        {
+        {               
             openFileDialog1.ShowDialog();
             label7.Text = openFileDialog1.FileName;
             string[] array = File.ReadAllLines(label7.Text);
             foreach (string item in array)
             {
-                caminho = item.StartsWith("Database") ? item : caminho;
+                caminho = item.StartsWith("database") ? item : caminho;
             };
             //Localizar no INI a datasource (localhost ou IP)
-            label7.Text = caminho.Remove(0, 9);
-            label7.Text = caminho.Remove(0, 9).Substring(caminho.IndexOf);
-
+            label7.Text = caminho;
         }
 
         private void label7_Click(object sender, EventArgs e)
